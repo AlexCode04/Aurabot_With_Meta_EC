@@ -1,0 +1,20 @@
+const nombresComunes = new Set([
+  "Aarón", "Abel", "Abril", "Adriana", "Adrián", "Agustina", "Agustín", "Alan", "Alejandra", "Alejandro",
+  "Alfonso", "Alicia", "Alma", "Amanda", "Amparo", "Ana", "Andrés", "Ángela", "Ángel", "Antonia",
+  "Antonio", "Aurora", "Axel", "Beatriz", "Belén", "Benjamín", "Brenda", "Bruno", "Camila", "Camilo",
+  "Carla", "Carlos", "Carmen", "Carolina", "Catalina", "César", "Clara", "Claudia", "Cristian", "Daniel",
+  "Daniela", "David", "Diana", "Diego", "Dylan", "Eduardo", "Elena", "Elías", "Elisa", "Elizabeth",
+  "Emilia", "Emiliano", "Emilio", "Emma", "Enrique", "Esperanza", "Esteban", "Estefanía", "Estrella",
+  "Eva", "Ezequiel", "Fabiola", "Facundo", "Felipe", "Fernando", "Fernanda", "Florencia", "Francisco",
+  "Gabriel", "Gabriela", "Gloria", "Gonzalo", "Graciela", "Guadalupe", "Guillermo", "Ignacio", "Isaac",
+  "Isabel", "Iván", "Jacobo", "Javier", "Jesús", "Jimena", "Joaquín", "Joel", "Jonathan", "Jorge", "José",
+  "Josefina", "Juan", "Juana", "Julia", "Juliana", "Julieta", "Julio", "Karen", "Kevin", "Laura",
+  "Leticia", "Leonardo", "Liliana", "Lorena", "Lucas", "Lucía", "Luis", "Luisa", "Luna", "Magdalena",
+  "Manuel", "Manuela", "Marco", "Marcos", "Marcela", "María", "Mariana", "Marina", "Mario", "Marta",
+  "Martina", "Mateo", "Matías", "Maximiliano", "Mercedes", "Miguel", "Milagros", "Mónica", "Natalia",
+  "Nicolás", "Noelia", "Pablo", "Paola", "Patricia", "Paula", "Pedro", "Pilar", "Rafael", "Ramiro",
+  "Raquel", "Raúl", "Rebeca", "Renata", "Ricardo", "Rocío", "Rodrigo", "Romina", "Rosa", "Salvador",
+  "Sandra", "Samuel", "Santiago", "Sara", "Sebastián", "Sergio", "Silvana", "Silvia", "Simón", "Sofía",
+  "Susana", "Tatiana", "Teresa", "Tomás", "Valentina", "Valentín", "Valeria", "Verónica", "Victoria",
+  "Vicente", "Víctor", "Viviana", "Ximena", "Yolanda", "Yesica", "Zaira"
+]);
