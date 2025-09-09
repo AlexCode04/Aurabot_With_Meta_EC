@@ -12,6 +12,7 @@ class Configs {
         this.GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
         this.OPENAI_API_KEY = process.env.OPENAI_API_KEY;
         this.FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:5173';
+        this.FRONTEND_URL_SERVER = process.env.FRONTEND_URL_SERVER || 'http://frontend:3000/api';
     }
 
 }

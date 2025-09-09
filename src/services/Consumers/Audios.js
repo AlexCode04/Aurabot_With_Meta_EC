@@ -27,7 +27,7 @@ async function obtenerPathAudioRandom() {
     }
 
     const filename = selectedAudio.path.split('/').pop();
-    const pathSelectedAudio = `${Configs.FRONTEND_URL}/uploads/audios/${filename}`;
+    const pathSelectedAudio = `${Configs.FRONTEND_URL_SERVER}/${filename}`;
 
     return pathSelectedAudio;
   } catch (error) {
