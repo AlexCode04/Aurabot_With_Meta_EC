@@ -1,7 +1,7 @@
 const axios = require("axios");
 const Configs = require('../config/configs');
 
-class WhatsAppService {
+class WhatsAppServiceWithMeta {
     constructor() {
         
     }
@@ -43,4 +43,4 @@ class WhatsAppService {
 }
 
 
-module.exports = new WhatsAppService();
+module.exports = new WhatsAppServiceWithMeta();

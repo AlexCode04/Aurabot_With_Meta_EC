@@ -1,7 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
-const whatsappService = require("./whatsappService");
 const Sesion = require("../database/schemas/SesionSchema");
 const SesionRollback = require("../database/schemas/SesionSchemaRollback");
 const { responderIAService } = require("./responderIAService");
@@ -37,9 +36,14 @@ async function ProcesoFinalRespuesta(numero, sesion) {
     await GenerarRollBack(sesion);
   }
 
-async function processIncomingMessage(message) {
+async function processIncomingMessage(message, ServiceWhatsapp) {
+    
     const numero = message.from;
-    const texto = message.text?.body;
+    const texto = message.body;
+
+    const Whatsapp = ServiceWhatsapp;
+
+    console.log(`Texto recibido de ${numero}: ${texto}`);
 
     if (!texto) return;
 
@@ -74,7 +78,7 @@ async function processIncomingMessage(message) {
             // ✅ Consentimiento de datos
             if (sesionRollback.aceptoTratamientoDeDatos === false && sesion.respuestas.length === 0) {
                 const mensajeConsentimiento = "Antes de continuar, queremos asegurarnos de contar con tu autorización para tratar tus datos personales. Tu información será manejada con cuidado y solo para los fines que te hemos indicado. ¿Nos autorizas a continuar? Puedes responder de forma positiva o negativa, o simplemente escribir 'SI' o 'NO'.";
-                await whatsappService.sendMessage(numero, mensajeConsentimiento);
+                await Whatsapp.sendMessage(numero, mensajeConsentimiento);
 
                 sesion.respuestas.push({ pregunta: mensajeConsentimiento, respuesta: mensajeConcatenado });
                 await sesion.save();
@@ -97,14 +101,14 @@ async function processIncomingMessage(message) {
                     sesionRollback.aceptoTratamientoDeDatos = true;
                     await sesionRollback.save();
                     mensaje = await generarMensajeConsentimientoAura('SI')
-                    await whatsappService.sendMessage(numero, mensaje);
+                    await Whatsapp.sendMessage(numero, mensaje);
                 } else if (respuestaConsentimiento == 0) {
                     mensaje = await generarMensajeConsentimientoAura('NO');
-                    await whatsappService.sendMessage(numero, mensaje);
+                    await Whatsapp.sendMessage(numero, mensaje);
                     await ProcesoFinalRespuesta(numero, sesion);
                     return;
                 } else {
-                    await whatsappService.sendMessage(numero, "No entendí tu respuesta. Por favor responde 'SI' o 'NO'.");
+                    await Whatsapp.sendMessage(numero, "No entendí tu respuesta. Por favor responde 'SI' o 'NO'.");
                     await ProcesoFinalRespuesta(numero, sesion);
                     return;
                 }
@@ -129,20 +133,20 @@ async function processIncomingMessage(message) {
                 audiosEnProceso.add(numero);
                 try {
                     const mensajePreparacion = await generarMensajePreparacionMeditacion();
-                    await whatsappService.sendMessage(numero, mensajePreparacion);
+                    await Whatsapp.sendMessage(numero, mensajePreparacion);
 
                     const audioUrl = await obtenerPathAudioRandom();
                     console.log("URL del audio obtenido:", audioUrl);
                     if (!audioUrl) throw new Error("No se pudo obtener un audio válido");
 
-                    await whatsappService.sendAudio(numero, audioUrl);
-                    await whatsappService.sendMessage(numero, "Cuando termines, me dices cómo te sientes 🙏");
+                    await Whatsapp.sendAudio(numero, audioUrl);
+                    await Whatsapp.sendMessage(numero, "Cuando termines, me dices cómo te sientes 🙏");
 
                     sesion.audioEnviado = true;
                     await sesion.save();
                 } catch (err) {
                     console.error("Error al enviar meditación:", err);
-                    await whatsappService.sendMessage(numero, "Cuando termines, estaré atenta a tu respuesta. Tómate tu tiempo, estoy aquí para ti.");
+                    await Whatsapp.sendMessage(numero, "Cuando termines, estaré atenta a tu respuesta. Tómate tu tiempo, estoy aquí para ti.");
                 } finally {
                     audiosEnProceso.delete(numero);
                 }
@@ -154,7 +158,7 @@ async function processIncomingMessage(message) {
 
             // ✅ GPT Respuesta
             const respuestaGPT = await responderIAService(sesion.respuestas, mensajeConcatenado, sesionRollback);
-            await whatsappService.sendMessage(numero, respuestaGPT);
+            await Whatsapp.sendMessage(numero, respuestaGPT);
 
             sesion.respuestas.push({ pregunta: respuestaGPT, respuesta: mensajeConcatenado });
             sesion.CantidadMensajes += 1;
@@ -165,7 +169,7 @@ async function processIncomingMessage(message) {
 
         } catch (error) {
             console.error("Error procesando mensaje:", error);
-            await whatsappService.sendMessage(numero, "Dame un momento, por favor. Estoy aquí para ti.");
+            await Whatsapp.sendMessage(numero, "Dame un momento, por favor. Estoy aquí para ti.");
         }
     }, delayHumano);
 
