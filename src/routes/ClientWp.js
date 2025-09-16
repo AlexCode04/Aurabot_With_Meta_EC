@@ -22,7 +22,6 @@ router.get('/qr', async (req, res) => {
     // Si ya hay QR pendiente
     if (wsp.getCurrentQR()) { // Cambiar getQR()
         const qrFinal = await QRCode.toDataURL(wsp.getCurrentQR());
-        console.log('qrFinal:', qrFinal);
         return res.json({ status: 'QR_REQUIRED', qr: qrFinal });
     }
 
@@ -34,7 +33,6 @@ router.get('/qr', async (req, res) => {
             return res.json({ status: 'CONNECTED', message: 'Conectado automáticamente ✅' });
         }
         const qrFinal = await QRCode.toDataURL(wsp.getCurrentQR());
-        console.log('qrFinal:', qrFinal);
         res.json({ status: 'QR_REQUIRED', qr: qrFinal });
     } catch (error) {
         res.status(500).json({ status: 'ERROR', message: 'No se pudo generar QR' });

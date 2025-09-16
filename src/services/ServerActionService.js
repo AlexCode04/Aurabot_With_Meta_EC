@@ -117,9 +117,14 @@ async function serverFunctionsActive(cliente) {
     const tiempo_notifiacion_comunidad = ahora.getTime() - 60 * 60 * 1000; // 1 hora
     const tiempo_notificacion_2 = ahora.getTime() - 3 * 24 * 60 * 60 * 1000;
 
+    if(!cliente || cliente == null) {
+        console.error("Cliente no está definido. No se pueden ejecutar las funciones del servidor.");
+        return;
+    }
+
     await notificarUsuariosInactivos(tiempo_notifiacion, false, cliente);
     await notificarUsuariosInactivos(tiempo_notificacion_2, true, cliente);
-    await ReiniciarSesionPorHora(20);
+    await ReiniciarSesionPorHora(24);
     await notificarComunidad(tiempo_notifiacion_comunidad, cliente);
 }
 

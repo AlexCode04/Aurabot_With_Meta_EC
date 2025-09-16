@@ -93,7 +93,6 @@ function getCurrentQR() {
 
 function getCurrentClient() {
     console.log('Obteniendo cliente actual:', sessionStatus);
-    console.log('client:', client);
     return client;
 }
 
