@@ -3,7 +3,7 @@ const Sesion = require("../database/schemas/SesionSchema");
 const SesionRollback = require("../database/schemas/SesionSchemaRollback");
 const { responderIAService } = require("./responderIAService")
 const { ReiniciarSesionPorHora } = require('../controllers/SesionController')
-const { obtenerGrupos } = require("./Consumers/grupos");
+const { obtenerGrupos } = require("./Consumers/Grupos");
 
 
 async function notificarUsuariosInactivos(tiempo1, bandera_n_notificaciones, cliente) {

@@ -123,9 +123,6 @@ async function processIncomingMessage(message, ServiceWhatsapp) {
                 }
             }
 
-            const audioUrl = await obtenerPathAudioRandom();
-                    console.log("URL del audio obtenido:", audioUrl);
-
             // ✅ Enviar audio si aplica
             if (sesion.interesMeditacion && !sesion.audioEnviado) {
                 if (audiosEnProceso.has(numero)) return;
