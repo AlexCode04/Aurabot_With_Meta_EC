@@ -86,10 +86,10 @@ async function notificarComunidad(tiempo, cliente) {
                 const numero = sesion.numeroWhatsApp;
                 await cliente.sendMessage(
                     numero,
-                    `✨🌿 Únete a nuestra Comunidad de Mindfulness en WhatsApp 🌿✨
-                    Un espacio donde recibirás meditaciones, consejos prácticos y recordatorios para vivir con más calma y claridad cada día, donde trascenderás tus niveles de conciencia.
-                    👉 Haz parte de este grupo y comienza a transformar tu bienestar desde hoy
-                            
+                    `✨🌿 Únete a nuestra Comunidad de Mindfulness en WhatsApp 🌿
+✨ Un espacio donde recibirás meditaciones, consejos prácticos y recordatorios para vivir con más calma y claridad cada día, donde trascenderás tus niveles de conciencia. 
+👉 Haz parte de este grupo y comienza a transformar tu bienestar desde hoy. 
+
                     ${groupLink}`
                 );
                 sesion.invitadoComunidad = true;

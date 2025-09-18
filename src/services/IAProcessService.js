@@ -113,9 +113,6 @@ async function responderConGPT(historialRespuestas, parametros, preguntas, perfi
 
         Si el historial no está vacío, no repitas lo que ya se ha dicho, nunca vuelvas a mencionar lo que ya se ha conversado y evita redundancias, maneja una lógica conversacional fluida como si estuvieran conversando en persona.
         De igual forma, no saludes de nuevo si ya lo saludaste en la conversación, lo ideal es que se pueda conversar lo más humanamente posible.
-
-        No finalices la conversación al primer intento, siempre busca mantener el diálogo abierto y fluido.
-        Solo cierra la sesión con el usuario cuando él se despida primero.
         `;
 
         const respuesta = await generarRespuestaIA(parametros, promptUsuario, perfil, perfilDefault);
