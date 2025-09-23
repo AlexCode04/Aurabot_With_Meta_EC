@@ -27,7 +27,7 @@ async function responderConGPT(historialRespuestas, parametros, preguntas, perfi
         `
 
         if (esSeguimiento) {
-            const prompt = `Realiza un mensaje preguntando al usuario, como continua y como esta el día de hoy basandote en tu perfil`;
+            const prompt = `Realiza un mensaje preguntando al usuario, como continua y como esta el día de hoy basandote en su perfil`;
 
             const respuesta = await generarRespuestaIA(parametros, prompt, perfil, perfilDefault);
 
@@ -71,6 +71,7 @@ async function responderConGPT(historialRespuestas, parametros, preguntas, perfi
                     r.respuesta.toLowerCase().includes("respiración")
             );
 
+
         const usuarioInfo = {
             nombre: rollbackUsuario?.nombre || "",
             edad: rollbackUsuario?.edad || "",
@@ -95,8 +96,17 @@ async function responderConGPT(historialRespuestas, parametros, preguntas, perfi
         IMPORTANTE: Recuerda continuar la conversación de una manera fluida y natural, Lee y analiza con atención el historial, No hagas saludos redundantes.
 
         Información conocida:
-        del usuario se conoce esta información, asi que no le preguntes sobre lo que ya conoces:
-        ${Object.entries(usuarioInfo).map(([key, value]) => `• ${key}: ${value}`).join("\n")}
+        del usuario se conoce esta información, asi que no le hagas preguntas relacionadas sobre lo que ya conoces y usa esta información para personalizar tus respuestas:
+        ${
+            "• Nombre: " + usuarioInfo.nombre + "\n" +
+            "• Edad: " + usuarioInfo.edad + "\n" +
+            "• Profesión: " + usuarioInfo.profesion + "\n" +
+            "• Círculo social: " + usuarioInfo.circulosocial + "\n" +
+            "• Ciudad: " + usuarioInfo.ciudad + "\n" +
+            "• Familiares: " + usuarioInfo.familiares + "\n" +
+            "• Hobbies: " + usuarioInfo.hobbies + "\n" +
+            "• Estado general: " + usuarioInfo.estadogeneral + "\n"
+        }
 
         Último mensaje del usuario:"${ultimoMensaje}"
 
@@ -113,10 +123,8 @@ async function responderConGPT(historialRespuestas, parametros, preguntas, perfi
 
         Si el historial no está vacío, no repitas lo que ya se ha dicho, nunca vuelvas a mencionar lo que ya se ha conversado y evita redundancias, maneja una lógica conversacional fluida como si estuvieran conversando en persona.
         De igual forma, no saludes de nuevo si ya lo saludaste en la conversación, lo ideal es que se pueda conversar lo más humanamente posible.
-
-        No finalices la conversación al primer intento, siempre busca mantener el diálogo abierto y fluido.
-        Solo cierra la sesión con el usuario cuando él se despida primero.
         `;
+        
 
         const respuesta = await generarRespuestaIA(parametros, promptUsuario, perfil, perfilDefault);
 

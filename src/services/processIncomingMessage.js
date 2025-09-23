@@ -116,7 +116,10 @@ async function processIncomingMessage(message, ServiceWhatsapp) {
 
             // ✅ Si pidió meditación
             if (!sesion.interesMeditacion && !sesion.audioEnviado) {
-                const resultadoIntencion = await detectarIntencionMeditacion(mensajeConcatenado);
+
+                const ultimaPregunta = sesion?.respuestas?.length > 0 ? sesion.respuestas[sesion.respuestas.length - 1]?.respuesta ?? "" : "";
+
+                const resultadoIntencion = await detectarIntencionMeditacion(mensajeConcatenado, ultimaPregunta);
                 if (resultadoIntencion === "PEDIR_MEDITACION") {
                     sesion.interesMeditacion = true;
                     await sesion.save();
@@ -154,7 +157,7 @@ async function processIncomingMessage(message, ServiceWhatsapp) {
             }
 
             // ✅ GPT Respuesta
-            const respuestaGPT = await responderIAService(sesion.respuestas, mensajeConcatenado, sesionRollback);
+            const respuestaGPT = await responderIAService(sesion.respuestas, mensajeConcatenado, false, sesionRollback);
             await Whatsapp.sendMessage(numero, respuestaGPT);
 
             sesion.respuestas.push({ pregunta: respuestaGPT, respuesta: mensajeConcatenado });

@@ -4,7 +4,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 async function extraerInformacionUsuario(historial, datosPrevios) {
     const historialTexto = historial
-        .map((r, i) => `${i + 1}. Usuario: ${r.respuesta}\n   Aura: ${r.pregunta}`)
+        .map((r, i) => `${i + 1}. Usuario: ${r.respuesta}\n   asistente de bienestar: ${r.pregunta}`)
         .join("\n\n");
 
     const prompt = `
@@ -64,7 +64,7 @@ ${historialTexto}
 
     try {
         const completion = await openai.chat.completions.create({
-            model: "gpt-4o",
+            model: "gpt-4.1",
             max_tokens: 400,
             temperature: 0.3,
             messages: [
@@ -409,16 +409,20 @@ async function registrarNombreBD(historial) {
 
 }
 
-async function detectarIntencionMeditacion(ultimaRespuesta) {
+async function detectarIntencionMeditacion(ultimaRespuesta, ultimaPregunta) {
 
     const prompt = `
                     A continuación se muestra la ultima respuesta registrada entre un usuario y un asistente de mindfulness.
                     Tu tarea es detectar si en algún punto el usuario ha **pedido explícitamente** o **aceptado hacer** una meditación guiada (en formato de audio). Esto incluye frases como: "quiero meditar", "pon el audio", "quiero escuchar la meditación", etc.
+                    Ten en cuenta que aplica para toda petición de que envie un audio, frases como "quiero un audio", "quiero escuchar un audio", "quiero una meditación", "quiero hacer una meditación", "quiero probar la meditación", "quiero intentar la meditación", "me gustaría hacer una meditación", etc. son todas indicativas de que el usuario quiere hacer una meditación guiada.
 
                     REGLAS:
                     - Si el usuario muestra intención clara de hacer o escuchar una meditación, responde solo con: PEDIR_MEDITACION
                     - Si no hay ninguna señal clara de intención, responde solo con: NO_ENCONTRADO
                     - No des ninguna explicación adicional.
+
+                    Ultima respuesta del sistema:
+                    ${ultimaPregunta}
 
                    Ultima respuesta del usuario de la conversación:
                     ${ultimaRespuesta}
