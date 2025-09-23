@@ -11,7 +11,8 @@ const whatsappService = require("./services/WhatsAppServiceWeb");
 const wpRoutes = require('./routes/ClientWp');
 const usersRoutes = require('./routes/sesiones');
 const cors = require('cors');
-
+const Logger = require('./logs/service/Logger');
+const { VerifyTimeBeforeSendEmail } = require('./logs/controller/LoggerController');
 
 dotenv.config();
 ConectDB();
@@ -66,14 +67,14 @@ function setupWhatsAppListeners() {
     const client = getCurrentClient();
 
     if (!client) {
-        console.log('⚠️ Cliente no inicializado aún');
+        Logger.Log('No hay cliente disponible para configurar listeners', 'error', 'setupWhatsAppListeners');
         return;
     }
 
+    Logger.Log('Configurando listeners de WhatsApp', 'info', 'setupWhatsAppListeners');
     // Solo configurar si no tiene listeners ya
     if (client.listenerCount('message') === 0) {
         client.on('message', async (msg) => {
-            console.log('Mensaje recibido:', msg.body);
 
             const MessageData = {
                 from: msg.from,
@@ -83,16 +84,52 @@ function setupWhatsAppListeners() {
             }
 
             await processIncomingMessage(MessageData, wsp);
+            Logger.Log(`Mensaje recibido y procesado ${msg.body}`, 'info', 'setupWhatsAppListeners');
         });
 
         wsp = new whatsappService(client);
-        console.log('✅ Listeners de WhatsApp configurados');
+        Logger.Log('Listeners de WhatsApp configurados', 'info', 'setupWhatsAppListeners');
     }
 }
+
+
+setInterval(async () => {
+    const client = getCurrentClient();
+    if (client && client.info) {
+        Logger.Log(`Cliente activo: ${client.info.pushname} - ${client.info.wid.user}`, 'info', 'ClientStatusCheck');
+    }
+
+    if (!client || client.status !== 'CONNECTED') {
+        Logger.Log('Cliente no conectado', 'warn', 'ClientStatusCheck');
+
+        const emailData = {
+            subject: 'Error al reiniciar el cliente de WhatsApp',
+            message: `Hubo un error al intentar reiniciar el cliente de WhatsApp: Ingresar y conectar Qr de nuevo.`,
+            context: {
+                subject: 'Error al reiniciar el cliente de WhatsApp',
+                message: `Hubo un error al intentar reiniciar el cliente de WhatsApp: Ingresar y conectar Qr de nuevo.`,
+                date: new Date().toLocaleDateString(),
+            }
+        };
+
+        const canSend = await VerifyTimeBeforeSendEmail();
+        if (!canSend) {
+            Logger.Log('No ha pasado el tiempo mínimo para enviar otro email.', 'info', 'ClientStatusCheck');
+            return;
+        }
+
+        Logger.sendNotification(emailData);
+        return;
+    }
+
+    Logger.Log('Cliente no conectado. Intentando reiniciar...', 'warn', 'ClientStatusCheck');
+
+}, 1 * 60 * 1000); // Cada 1 minuto
+
 
 // Exportar la función para usarla en las rutas
 global.setupWhatsAppListeners = setupWhatsAppListeners;
 
 setInterval(() => serverFunctionsActive(wsp), 1 * 60 * 1000); // Cada 1 minuto
 
-app.listen(PORT, () => console.log(`🚀 Servidor en puerto ${PORT}`));
+app.listen(PORT, () => Logger.Log(`Servidor en puerto ${PORT}`, 'info', 'serverListen'));

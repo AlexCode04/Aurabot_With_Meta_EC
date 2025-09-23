@@ -1,6 +1,8 @@
 // bot/whatsappBot.js - Adaptación de tu código actual
 const { Client, LocalAuth } = require('whatsapp-web.js');
 const qrcode = require('qrcode-terminal');
+const fs = require("fs");
+const path = require("path");
 
 let client = null;
 let sessionStatus = 'DISCONNECTED';
@@ -23,7 +25,7 @@ function initializeClient() {
         console.log('WhatsApp listo');
         sessionStatus = 'CONNECTED';
         currentQR = null;
-        
+
         // Configurar listeners cuando esté listo
         if (global.setupWhatsAppListeners) {
             global.setupWhatsAppListeners();
@@ -43,7 +45,7 @@ async function startBot() {
     if (!client) {
         initializeClient();
     }
-    
+
     if (sessionStatus === 'CONNECTED') {
         return { success: true, status: 'ALREADY_CONNECTED' };
     }
@@ -78,7 +80,7 @@ async function forceLogin() {
                 setTimeout(checkQR, 1000);
             }
         };
-        
+
         checkQR();
     });
 }
@@ -98,13 +100,31 @@ function getCurrentClient() {
 
 async function killBot() {
     if (client) {
-        await client.destroy();
+        try {
+            // cerrar cliente y navegador puppeteer
+            await client.destroy();
+
+            if (client.pupBrowser) {
+                await client.pupBrowser.close(); // cierra chromium
+            }
+        } catch (err) {
+            console.error("Error al destruir cliente:", err);
+        }
         client = null;
     }
-    sessionStatus = 'DISCONNECTED';
+
+
+    const sessionPath = path.join(__dirname, "../../.wwebjs_auth");
+    if (fs.existsSync(sessionPath)) {
+        fs.rmSync(sessionPath, { recursive: true, force: true });
+    }
+
+    sessionStatus = "DISCONNECTED";
     currentQR = null;
-    return { success: true, status: 'DISCONNECTED' };
+
+    return { success: true, status: "DISCONNECTED" };
 }
+
 
 // Función para obtener grupos (equivalente a tu obtenerGrupos)
 async function obtenerGrupos() {
@@ -114,7 +134,7 @@ async function obtenerGrupos() {
 
     const chats = await client.getChats();
     const grupos = chats.filter(chat => chat.isGroup);
-    
+
     return grupos.map(grupo => ({
         id: grupo.id._serialized,
         name: grupo.name,

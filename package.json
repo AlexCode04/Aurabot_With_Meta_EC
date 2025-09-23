@@ -23,6 +23,7 @@
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "gpt-3-encoder": "^1.1.4",
+    "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.8.7",
     "openai": "^4.25.1",
     "qrcode": "^1.5.4",
