@@ -157,7 +157,7 @@ async function processIncomingMessage(message, ServiceWhatsapp) {
             }
 
             // ✅ GPT Respuesta
-            const respuestaGPT = await responderIAService(sesion.respuestas, mensajeConcatenado, sesionRollback);
+            const respuestaGPT = await responderIAService(sesion.respuestas, mensajeConcatenado, false, sesionRollback);
             await Whatsapp.sendMessage(numero, respuestaGPT);
 
             sesion.respuestas.push({ pregunta: respuestaGPT, respuesta: mensajeConcatenado });

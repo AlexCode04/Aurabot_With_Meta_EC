@@ -4,7 +4,7 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
 async function extraerInformacionUsuario(historial, datosPrevios) {
     const historialTexto = historial
-        .map((r, i) => `${i + 1}. Usuario: ${r.respuesta}\n   Aura: ${r.pregunta}`)
+        .map((r, i) => `${i + 1}. Usuario: ${r.respuesta}\n   asistente de bienestar: ${r.pregunta}`)
         .join("\n\n");
 
     const prompt = `
@@ -64,7 +64,7 @@ ${historialTexto}
 
     try {
         const completion = await openai.chat.completions.create({
-            model: "gpt-4o",
+            model: "gpt-4.1",
             max_tokens: 400,
             temperature: 0.3,
             messages: [

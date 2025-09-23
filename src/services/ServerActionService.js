@@ -46,7 +46,8 @@ async function notificarUsuariosInactivos(tiempo1, bandera_n_notificaciones, cli
 
         for (const sesion of sesionesInactivas) {
             try {
-                const respuesta = await responderIAService(esSeguimiento);
+                // const respuesta = await responderIAService(esSeguimiento, sesion.respuesta);
+                const respuesta ="Hola 😊 ¿Cómo te sientes hoy? Me gustaría saber qué ha sido de ti hasta este momento 🌿✨"
                 await cliente.sendMessage(sesion.numeroWhatsApp, respuesta);
                 sesion.fechaUltimaInteraccion = new Date();
                 sesion.fechaUltimaNotificacion = new Date();

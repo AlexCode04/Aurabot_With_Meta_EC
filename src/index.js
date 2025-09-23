@@ -96,33 +96,8 @@ function setupWhatsAppListeners() {
 
 global.setupWhatsAppListeners = setupWhatsAppListeners;
 
-// 👉 Enganchamos eventos del cliente
-// const client = getCurrentClient();
+// Mantener funciones activas cada 5 minutos
+setInterval(() => {serverFunctionsActive(wsp)}, 5 * 60 * 1000);
 
-// if (client) {
-//     client.on('ready', () => {
-//         console.log("✅ WhatsApp listo, configurando listeners...");
-//         setupWhatsAppListeners();
-
-//         // Mantener funciones activas cada 5 minutos
-//         setInterval(() => {
-//             if (client.info && wsp) {
-//                 serverFunctionsActive(wsp);
-//             } else {
-//                 console.log("⚠️ Cliente no disponible, se omite ejecución.");
-//             }
-//         }, 5 * 60 * 1000);
-//     });
-
-//     client.on('disconnected', (reason) => {
-//         console.log("⚠️ WhatsApp desconectado:", reason);
-//         console.log("♻️ Reiniciando cliente...");
-//         startBot();
-//     });
-
-//     client.on('auth_failure', (msg) => {
-//         console.error("❌ Fallo de autenticación:", msg);
-//     });
-// }
 
 app.listen(PORT, () => console.log(`🚀 Servidor en puerto ${PORT}`));
