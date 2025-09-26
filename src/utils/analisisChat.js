@@ -64,7 +64,7 @@ ${historialTexto}
 
     try {
         const completion = await openai.chat.completions.create({
-            model: "gpt-4.1",
+            model: "gpt-4.1-mini",
             max_tokens: 400,
             temperature: 0.3,
             messages: [
