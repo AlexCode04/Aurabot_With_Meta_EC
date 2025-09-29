@@ -6,7 +6,7 @@ const { serverFunctionsActive } = require('./services/ServerActionService');
 const Configs = require("./config/configs");
 const ConectDB = require('./database/MongoClient');
 const { processIncomingMessage } = require('./services/processIncomingMessage');
-const { getCurrentClient, startBot } = require('./ClientsWp/Client_Wp_web');
+const { getCurrentClient, startBot, getSessionStatus} = require('./ClientsWp/Client_Wp_web');
 const whatsappService = require("./services/WhatsAppServiceWeb");
 const wpRoutes = require('./routes/ClientWp');
 const usersRoutes = require('./routes/sesiones');
@@ -103,7 +103,9 @@ setInterval(async () => {
         Logger.Log(`Cliente activo: ${client.info.pushname} - ${client.info.wid.user}`, 'info', 'ClientStatusCheck');
     }
 
-    if (!client || client.status !== 'CONNECTED') {
+    console.log("Sesion: ", getSessionStatus());
+
+    if (getSessionStatus() !== 'CONNECTED') {
         Logger.Log('Cliente no conectado', 'warn', 'ClientStatusCheck');
 
         const emailData = {
