@@ -4,11 +4,22 @@ const SesionRollback = require("../database/schemas/SesionSchemaRollback");
 const { responderIAService } = require("./responderIAService")
 const { ReiniciarSesionPorHora } = require('../controllers/SesionController')
 const { obtenerGrupos } = require("./Consumers/Grupos");
-
+const { mensajesSeguimiento } = require("../utils/Seguimientos");
 
 async function notificarUsuariosInactivos(tiempo1, bandera_n_notificaciones, cliente) {
     try {
         console.log("Iniciando notificación de usuarios inactivos...");
+
+        const ahora = new Date();
+        const horaActual = ahora.getHours() + ahora.getMinutes() / 60;
+
+        const horaInicio = 7;
+        const horaFin = 21;
+
+        if (horaActual < horaInicio || horaActual > horaFin) {
+            console.log("La hora actual está fuera del rango permitido.");
+            return;
+        }
 
         const limite = new Date(tiempo1);
 
@@ -27,10 +38,9 @@ async function notificarUsuariosInactivos(tiempo1, bandera_n_notificaciones, cli
                 try {
                     await cliente.sendMessage(
                         sesion.numeroWhatsApp,
-                        `¡Hola! Ha sido un placer tenerte en la sesión anterior,🌿 Espero que la experiencia haya sido significativa para ti y que el mensaje haya resonado en tu conciencia y tu corazón. 💫
-                        Me gustaría saber cómo te sientes, si tienes alguna pregunta, o solo quisieras que conversemos.
-                        Sino, no importa estaré aquí para ti, cuando me necesites.! 🤗`
-                        );  
+                        `¡Hola! Ha sido un placer tenerte en la sesión anterior 🌿. Espero que la experiencia haya sido significativa para ti 💫.
+Me gustaría saber cómo te sientes o si tienes alguna pregunta. Si no, estaré aquí cuando me necesites 🤗.`
+                    );
                     sesion.fechaUltimaNotificacion = new Date();
                     await sesion.save();
                 } catch (err) {
@@ -40,15 +50,15 @@ async function notificarUsuariosInactivos(tiempo1, bandera_n_notificaciones, cli
             return;
         }
 
-        if(sesionesInactivas.length === 0) {
-            return;
-        }
+        if (sesionesInactivas.length === 0) return;
 
         for (const sesion of sesionesInactivas) {
             try {
-                // const respuesta = await responderIAService(esSeguimiento, sesion.respuesta);
-                const respuesta ="Hola 😊 ¿Cómo te sientes hoy? Me gustaría saber qué ha sido de ti hasta este momento 🌿✨"
-                await cliente.sendMessage(sesion.numeroWhatsApp, respuesta);
+                // Selecciona mensaje aleatorio del array
+                const mensajeAleatorio = mensajesSeguimiento[Math.floor(Math.random() * mensajesSeguimiento.length)];
+
+                await cliente.sendMessage(sesion.numeroWhatsApp, mensajeAleatorio);
+
                 sesion.fechaUltimaInteraccion = new Date();
                 sesion.fechaUltimaNotificacion = new Date();
                 await sesion.save();
@@ -60,6 +70,8 @@ async function notificarUsuariosInactivos(tiempo1, bandera_n_notificaciones, cli
         console.error("Error en notificación de usuarios inactivos:", err);
     }
 }
+
+
 
 async function notificarComunidad(tiempo, cliente) {
     try {
