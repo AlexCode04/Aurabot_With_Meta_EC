@@ -89,7 +89,7 @@ async function obtenerRespuestaGeminiConReintentos({ promptUsuario, systemPrompt
 
     // Si llegamos aquí es porque todos los intentos fallaron
     console.warn("Todos los intentos fallaron. Se enviará un mensaje genérico.");
-    return "Disculpame, no entiendo tu mensaje, ¿puedes volverme a explicar?";
+    return "¡Hola! Agradecemos tu interés. Estamos experimentando un alto volumen de sesiones en este momento. Te pedimos que intentes contactarnos de nuevo en unos minutos. ¡Gracias por tu paciencia, pronto estaremos listos para ti!";
 }
 
 function generarConGPTDefault({ promptUsuario, systemPrompt }) {

@@ -108,7 +108,7 @@ async function processIncomingMessage(message, ServiceWhatsapp) {
                     await ProcesoFinalRespuesta(numero, sesion);
                     return;
                 } else {
-                    await Whatsapp.sendMessage(numero, "No entendí tu respuesta. Por favor responde 'SI' o 'NO'.");
+                    await Whatsapp.sendMessage(numero, "🌿 No entendí muy bien tu respuesta. Para poder seguir con claridad y respetando nuestras políticas, agradecería que me lo compartieras de manera sencilla, con un 'sí' o un 'no'. Gracias por tu comprensión.");
                     await ProcesoFinalRespuesta(numero, sesion);
                     return;
                 }

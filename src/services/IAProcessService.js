@@ -132,7 +132,7 @@ async function responderConGPT(historialRespuestas, parametros, preguntas, perfi
 
     } catch (err) {
         console.error("Error en OpenAI:", err);
-        return "Dame un momento, escríbeme en algunos minutos.";
+        return "¡Hola! Agradecemos tu interés. Estamos experimentando un alto volumen de sesiones en este momento. Te pedimos que intentes contactarnos de nuevo en unos minutos. ¡Gracias por tu paciencia, pronto estaremos listos para ti!";
     }
 }
 
